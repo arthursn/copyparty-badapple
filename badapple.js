@@ -37,16 +37,14 @@ function badapple() {
         let grid = qs("#ggrid")
         grid.innerHTML = ""
         grid.style.zoom = zoom
-        grid.style.width = `${grid.clientWidth}px`
 
-        // Calculate grid size
         let gridStyle = getComputedStyle(grid)
         let gridFileHeight = rempx(gridStyle.fontSize) * thegrid.sz + rempx(gridStyle.rowGap)
         let gridHeadHeight = rempx(getComputedStyle(qs("#ghead")).height)
+        let getNumberGridColumns = (grid) => (getComputedStyle(grid).gridTemplateColumns.match(/ /g) || []).length
 
-        canvas.width = (gridStyle.gridTemplateColumns.match(/ /g) || []).length + 1
-        // canvas.height = Math.floor((window.innerHeight - gridHeadHeight) / gridFileHeight / zoom) - 1
-        canvas.height = Math.floot(canvas.width / videoAspectRatio)
+        let canvasWidth = getNumberGridColumns(grid) + 1
+        let canvasHeight = Math.floor((window.innerHeight - gridHeadHeight) / gridFileHeight / zoom) - 1
         if ((videoAspectRatio * canvasHeight) > canvasWidth) {
             canvasHeight = Math.round(canvasWidth / videoAspectRatio)
         } else {
@@ -54,6 +52,13 @@ function badapple() {
         }
         canvas.height = canvasHeight
         canvas.width = canvasWidth
+
+        let clientWidth = grid.clientWidth
+        grid.style.width = `${clientWidth}px`
+        while (canvasWidth < (getNumberGridColumns(grid) + 1)) {
+            clientWidth -= 10
+            grid.style.width = `${clientWidth}px`
+        }
 
         let numPixels = canvas.width * canvas.height
 
@@ -102,7 +107,7 @@ function badapple() {
         //     return modal.alert(modal_title + "Please enter a valid zoom value (float, greater than 0%)")
         // let filename = await waitModalPrompt(modal_title + "Enter a file name for the grid items (purely visual):", "BADAPPLE!!")
         // let video_path = "./rickroll.mp4"
-        let videoPath = "./badapple.mp4"
+        let videoPath = "badapple.mp4"
         let zoom = 0.5
         let filename = "<3"
 
